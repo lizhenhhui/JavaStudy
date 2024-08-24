@@ -24,6 +24,6 @@ class Solution {
     }
 
     public static void main(String[] args) {
-        wordBreak("applepenapple", Arrays.asList("apple", "pen"));
+        wordBreak("applepenapple", Arrays.asList("apple", "pe"));
     }
 }
