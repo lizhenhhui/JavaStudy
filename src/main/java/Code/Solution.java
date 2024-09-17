@@ -1,29 +1,43 @@
 package Code;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-class Solution {
-    public static boolean wordBreak(String s, List<String> wordDict) {
-        int n = s.length();
-        boolean[] dp = new boolean[n+1];
-        dp[0]=true;
-        Set<String> set = new HashSet<>();
-        for (String str : wordDict)
-            set.add(str);
-        for (String str : wordDict) {
-            for (int i = str.length(); i <=n; i++) {
-                dp[i] = dp[i] || (dp[i - str.length()] && set.contains(s.substring(i - str.length(), i)));
+class  Solution {
 
+    public  int numBusesToDestination(int[][] routes, int source, int target) {
+        int result;
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < routes.length; i++) {
+            for (int x : routes[i]) {
+                List<Integer> list = map.getOrDefault(x, new ArrayList<>());
+                list.add(i);
+                map.put(x, list);
             }
         }
-
-        return dp[n];
-    }
-
-    public static void main(String[] args) {
-        wordBreak("applepenapple", Arrays.asList("apple", "pe"));
+        if (!map.containsKey(source) || !map.containsKey(target)) {
+            result = source != target ? -1 : 0;
+        } else {
+            Map<Integer, Integer> dis = new HashMap<>();
+            dis.put(source, 0);
+            Queue<Integer> q = new ArrayDeque<>();
+            q.add(source);
+            while (!q.isEmpty()) {
+                int x = q.poll();
+                int disx = dis.get(x);
+                for (int i : map.get(x)) {
+                    if (routes[i] != null) {
+                        for (int y : routes[i]) {
+                            if (!dis.containsKey(y)) {
+                                dis.put(y, disx + 1);
+                                q.add(y);
+                            }
+                        }
+                        routes[i] = null;
+                    }
+                }
+            }
+            result = dis.getOrDefault(target, -1);
+        }
+        return result;
     }
 }
